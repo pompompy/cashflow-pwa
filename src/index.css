@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ────────────────────────────────────────────────────────── */
+/* All colors referenced by component classes go through CSS custom properties
+   so that a single html.dark override flips the entire UI at once.           */
+
+:root {
+  /* Surfaces */
+  --bg-app:       #f8fafc;   /* slate-50  */
+  --bg-card:      #ffffff;
+  --bg-input:     #ffffff;
+  --bg-subtle:    #f8fafc;   /* slate-50  */
+  --bg-hover:     #f1f5f9;   /* slate-100 */
+  /* Borders */
+  --border-card:  #f1f5f9;   /* slate-100 */
+  --border-input: #e2e8f0;   /* slate-200 */
+  --border-muted: #e2e8f0;
+  /* Text */
+  --text-body:    #1e293b;   /* slate-800 */
+  --text-muted:   #64748b;   /* slate-500 */
+  --text-faint:   #94a3b8;   /* slate-400 */
+  --text-heading: #0a1e3a;   /* navy-900  */
+  /* Divider */
+  --today-line:   #b4cfe9;   /* navy-200  */
+  /* Focus ring */
+  --ring:         #3d89c5;   /* navy-400  */
+}
+
+html.dark {
+  /* Surfaces */
+  --bg-app:       #020617;   /* slate-950 */
+  --bg-card:      #0f172a;   /* slate-900 */
+  --bg-input:     #1e293b;   /* slate-800 */
+  --bg-subtle:    #1e293b;   /* slate-800 */
+  --bg-hover:     #1e293b;   /* slate-800 */
+  /* Borders */
+  --border-card:  #1e293b;   /* slate-800 */
+  --border-input: #334155;   /* slate-700 */
+  --border-muted: #334155;
+  /* Text */
+  --text-body:    #f1f5f9;   /* slate-100 */
+  --text-muted:   #94a3b8;   /* slate-400 */
+  --text-faint:   #64748b;   /* slate-500 */
+  --text-heading: #e2e8f0;   /* slate-200 */
+  /* Divider */
+  --today-line:   #124174;   /* navy-700  */
+  /* Focus ring */
+  --ring:         #3d89c5;
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
+
+/* ── Components ───────────────────────────────────────────────────────────── */
+@layer components {
+
+  .card {
+    background-color: var(--bg-card);
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-card);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 rounded-lg font-medium text-sm active:scale-95 transition-all disabled:opacity-40;
+    background-color: #124174;  /* navy-700 */
+    color: #ffffff;
+  }
+  .btn-primary:hover { background-color: #0e2f57; } /* navy-800 */
+
+  .btn-ghost {
+    @apply px-4 py-2 rounded-lg font-medium text-sm active:scale-95 transition-all;
+    color: var(--text-muted);
+  }
+  .btn-ghost:hover { background-color: var(--bg-hover); }
+
+  .btn-danger {
+    @apply px-4 py-2 rounded-lg font-medium text-sm active:scale-95 transition-all;
+    color: #dc2626;
+  }
+  html:not(.dark) .btn-danger { background-color: #fef2f2; }
+  html:not(.dark) .btn-danger:hover { background-color: #fee2e2; }
+  html.dark .btn-danger { background-color: rgb(153 27 27 / 0.2); }
+  html.dark .btn-danger:hover { background-color: rgb(153 27 27 / 0.35); }
+
+  .input {
+    @apply w-full rounded-lg px-3 py-2 text-sm focus:outline-none transition-colors;
+    background-color: var(--bg-input);
+    color: var(--text-body);
+    border: 1px solid var(--border-input);
+  }
+  .input:focus { box-shadow: 0 0 0 2px var(--ring); border-color: var(--ring); }
+  .input option { background-color: var(--bg-card); color: var(--text-body); }
+
+  .label {
+    @apply block text-xs font-medium mb-1;
+    color: var(--text-muted);
+  }
+
+  /* Today divider */
+  .today-divider { @apply flex items-center gap-3 my-2 px-4; }
+  .today-divider::before,
+  .today-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--today-line);
+  }
+
+  /* Amount colors stay the same in both modes */
+  .amount-positive { @apply text-emerald-600 font-mono; }
+  .amount-negative { @apply text-red-500 font-mono; }
+  .amount-neutral  { @apply text-slate-500 font-mono; }
+}
+
+/* ── Utilities ────────────────────────────────────────────────────────────── */
+
+/* Smooth scroll on iOS */
+.scroll-smooth { -webkit-overflow-scrolling: touch; }
+
+/* Number inputs: hide spinners */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+/* Theme transition — prevents flash on load */
+html { transition: background-color 0.15s ease; }
