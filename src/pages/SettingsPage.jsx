@@ -84,7 +84,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+    <div className="max-w-2xl mx-auto px-4 page-pad space-y-5">
 
       <div>
         <h1 className="font-serif text-2xl" style={{ color: 'var(--text-heading)' }}>Settings</h1>

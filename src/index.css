@@ -63,7 +63,15 @@ html.dark {
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+  /* Standard page chrome: top padding clears the iOS status bar in
+     standalone (Add to Home Screen) mode when using black-translucent. */
+  .page-pad {
+    padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+    padding-bottom: 1.25rem;
+  }
 }
 
 /* ── Components ───────────────────────────────────────────────────────────── */
