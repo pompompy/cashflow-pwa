@@ -127,7 +127,7 @@ export default function ImportPage() {
     const progress = `${dupeIdx + 1} of ${dupeQueue.length}`
 
     return (
-      <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+      <div className="max-w-2xl mx-auto px-4 page-pad space-y-5">
         <div>
           <h1 className="font-serif text-2xl text-navy-900">Possible Duplicate</h1>
           <p className="text-slate-400 text-sm mt-0.5">{progress} — review each near-match before importing</p>
@@ -215,7 +215,7 @@ export default function ImportPage() {
   // ── Post-dupe-review result ────────────────────────────────────────────────
   if (dupeDone) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+      <div className="max-w-2xl mx-auto px-4 page-pad space-y-5">
         <div>
           <h1 className="font-serif text-2xl text-navy-900">Import complete</h1>
         </div>
@@ -249,7 +249,7 @@ export default function ImportPage() {
 
   // ── Main import UI ─────────────────────────────────────────────────────────
   return (
-    <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+    <div className="max-w-2xl mx-auto px-4 page-pad space-y-5">
       <div>
         <h1 className="font-serif text-2xl text-navy-900">Import from Ally</h1>
         <p className="text-slate-400 text-sm mt-0.5">Import your transaction history to enable recurring detection.</p>

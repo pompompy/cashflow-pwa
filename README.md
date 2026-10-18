@@ -59,7 +59,7 @@ npm run deploy
 
 This builds the app and pushes `dist/` to the `gh-pages` branch, served at `https://<your-username>.github.io/cashflow-pwa/`. See [SETUP.md](SETUP.md) for the full walkthrough, including adding it to your iPhone home screen.
 
-> **Hosting somewhere else?** If you deploy to a different subpath (or a domain root), update the `base` option in `vite.config.js` to match — otherwise the app's asset paths won't resolve. The PWA manifest's `start_url` and icon paths are root-absolute, so double-check those too if you change hosting.
+> **Hosting somewhere else?** If you deploy to a different subpath (or a domain root), update the `base` option in `vite.config.js` **and** the `basename` on `BrowserRouter` in `src/main.jsx` to match — otherwise asset paths and client-side routes won't resolve. The PWA manifest uses paths relative to `base` (`start_url: './'`, icon files), so changing `base` is usually enough for the manifest.
 
 ## Tech stack
 

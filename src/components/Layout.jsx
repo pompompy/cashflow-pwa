@@ -55,8 +55,12 @@ export default function Layout({ children }) {
 
       {/* ── Main content area ───────────────────────────────── */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        <main className="flex-1 overflow-y-auto overscroll-none"
-          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        {/*
+          Mobile bottom clearance = tab bar (~4rem) + home-indicator safe area.
+          The fixed nav also pads its own safe-area so icons sit above the indicator.
+        */}
+        <main className="flex-1 overflow-y-auto overscroll-none
+                         pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0">
           {children}
         </main>
       </div>
@@ -65,14 +69,11 @@ export default function Layout({ children }) {
       <nav
         className="md:hidden fixed bottom-0 inset-x-0 z-50 flex
                    border-t border-slate-200 dark:border-slate-700
-                   bg-white dark:bg-slate-900"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+                   bg-white dark:bg-slate-900
+                   pb-[env(safe-area-inset-bottom,0px)]"
       >
         {NAV.map(n => <NavItem key={n.to} {...n} sidebar={false} />)}
       </nav>
-
-      {/* Spacer behind mobile bottom nav */}
-      <div className="md:hidden h-16" />
     </div>
   )
 }

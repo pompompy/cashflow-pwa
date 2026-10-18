@@ -102,7 +102,12 @@ export default function LedgerPage() {
     <div className="max-w-2xl mx-auto px-0 md:px-4 md:py-6">
 
       {/* ── Balance header ─────────────────────────────────── */}
-      <div className="bg-navy-900 text-white px-5 py-5 md:rounded-2xl md:mb-4 sticky top-0 z-10 md:relative">
+      {/* Top padding includes safe-area so content clears the status bar in
+          iOS standalone (black-translucent) while the navy still edge-bleeds. */}
+      <div
+        className="bg-navy-900 text-white px-5 pb-5 md:rounded-2xl md:mb-4 sticky top-0 z-10 md:relative"
+        style={{ paddingTop: 'calc(1.25rem + env(safe-area-inset-top, 0px))' }}
+      >
         <div className="flex items-start justify-between">
           <div>
             <p className="text-navy-300 text-xs font-medium tracking-wide uppercase">Current Balance</p>
@@ -243,9 +248,10 @@ export default function LedgerPage() {
       {/* ── FAB ────────────────────────────────────────────── */}
       <button
         onClick={() => setAddOpen(true)}
-        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 w-14 h-14 bg-navy-800 text-white
+        className="fixed right-4 md:right-6 w-14 h-14 bg-navy-800 text-white
                    rounded-full shadow-lg flex items-center justify-center hover:bg-navy-700
-                   active:scale-95 transition-all z-30"
+                   active:scale-95 transition-all z-30
+                   bottom-[calc(5rem+env(safe-area-inset-bottom,0px))] md:bottom-6"
         aria-label="Add transaction"
       >
         <Plus size={26} />
