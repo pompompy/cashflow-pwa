@@ -209,6 +209,8 @@ npm run build         # then re-drag dist/ to Netlify
 | PWA not installing on iPhone | Must use Safari, not Chrome |
 | Content under notch / home indicator | Confirm `viewport-fit=cover` is present and you've redeployed after the safe-area layout fixes |
 | Home-screen icon opens wrong page | Confirm manifest `start_url` resolves under `/your-repo/` (relative `./` with Vite `base`) |
+| White gap under tab bar in Home Screen app | Redeploy after the standalone viewport fill fix (`-webkit-fill-available` / `is-standalone`); delete and re-add the Home Screen icon so the service worker refreshes |
+| + button clipped by tab bar on Home Screen | Same as above — FAB is portaled to `document.body` so iOS cannot clip it inside the scrolling main |
 
 ---
 

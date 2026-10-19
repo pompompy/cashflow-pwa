@@ -37,7 +37,7 @@ function NavItem({ to, icon: Icon, label, sidebar }) {
 
 export default function Layout({ children }) {
   return (
-    <div className="flex h-svh" style={{ backgroundColor: 'var(--bg-app)' }}>
+    <div className="app-shell flex" style={{ backgroundColor: 'var(--bg-app)' }}>
 
       {/* ── Desktop sidebar (always dark navy, unchanged) ─── */}
       <aside className="hidden md:flex flex-col w-52 shrink-0 bg-navy-900 border-r border-navy-950">
@@ -56,20 +56,26 @@ export default function Layout({ children }) {
       {/* ── Main content area ───────────────────────────────── */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {/*
-          Mobile bottom clearance = tab bar (~4rem) + home-indicator safe area.
-          The fixed nav also pads its own safe-area so icons sit above the indicator.
+          Mobile bottom clearance = tab bar height + home-indicator safe area.
+          The fixed nav pads its own safe-area so icons sit above the indicator.
         */}
         <main className="flex-1 overflow-y-auto overscroll-none
-                         pb-[calc(4rem+env(safe-area-inset-bottom,0px))] md:pb-0">
+                         pb-[calc(var(--tabbar-height)+env(safe-area-inset-bottom,0px))] md:pb-0">
           {children}
         </main>
       </div>
 
       {/* ── Mobile bottom tab bar ───────────────────────────── */}
+      {/*
+        Fixed to the viewport bottom (outside the scrolling main). In standalone
+        mode the shell uses -webkit-fill-available so this sits on the real
+        screen edge — no phantom Safari-toolbar gap underneath.
+      */}
       <nav
         className="md:hidden fixed bottom-0 inset-x-0 z-50 flex
                    border-t border-slate-200 dark:border-slate-700
                    bg-white dark:bg-slate-900
+                   h-[calc(var(--tabbar-height)+env(safe-area-inset-bottom,0px))]
                    pb-[env(safe-area-inset-bottom,0px)]"
       >
         {NAV.map(n => <NavItem key={n.to} {...n} sidebar={false} />)}
