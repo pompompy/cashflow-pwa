@@ -8,9 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CashFlow" />
     <!--
-      Earliest height lock for iOS Add-to-Home-Screen.
-      Standalone: use innerHeight and NEVER offset bottom by visualViewport
-      (that offset was recreating the phantom gap under the tab bar).
+      Mark standalone ASAP. Shell fill is CSS inset:0 (not innerHeight) —
+      reading the viewport on first paint was leaving the phantom bottom gap.
     -->
     <script>
       (function () {
@@ -18,14 +17,9 @@
           navigator.standalone === true ||
           (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
         if (standalone) document.documentElement.classList.add('is-standalone')
-        var vv = window.visualViewport
-        var height = standalone
-          ? Math.max(window.innerHeight || 0, (vv && vv.height) || 0)
-          : (vv ? vv.height : window.innerHeight)
-        var root = document.documentElement
-        root.style.setProperty('--app-height', Math.round(height) + 'px')
-        root.style.setProperty('--vv-bottom', '0px')
-        root.style.setProperty('--vv-top', '0px')
+        document.documentElement.style.removeProperty('--app-height')
+        document.documentElement.style.setProperty('--vv-bottom', '0px')
+        document.documentElement.style.setProperty('--vv-top', '0px')
       })()
     </script>
     <link rel="apple-touch-icon" href="/icon-192.png" sizes="192x192" />

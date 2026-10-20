@@ -1,5 +1,5 @@
 // src/components/Fab.jsx
-// Mounts into #fab-root (Layout) — absolute within the column, not position:fixed.
+// Mounts into #fab-root, which Layout places just above the in-flow tab bar.
 import { createPortal } from 'react-dom'
 import { useEffect, useState } from 'react'
 

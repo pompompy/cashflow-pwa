@@ -1,8 +1,6 @@
 // src/components/Layout.jsx
-import { useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { LayoutList, TrendingUp, Upload, Sparkles, Settings } from 'lucide-react'
-import { useTabbarHeight } from '../hooks/useTabbarHeight'
 
 const NAV = [
   { to: '/',            icon: LayoutList, label: 'Ledger'      },
@@ -38,9 +36,6 @@ function NavItem({ to, icon: Icon, label, sidebar }) {
 }
 
 export default function Layout({ children }) {
-  const tabbarRef = useRef(null)
-  useTabbarHeight(tabbarRef)
-
   return (
     <div className="app-shell flex flex-col md:flex-row" style={{ backgroundColor: 'var(--bg-app)' }}>
 
@@ -59,34 +54,31 @@ export default function Layout({ children }) {
       </aside>
 
       {/*
-        Column shell: main scrolls; tab bar is in NORMAL DOCUMENT FLOW at the
-        bottom (not position:fixed). Fixed bottom chrome is what left the
-        phantom Safari-toolbar gap on iOS Home Screen.
+        Column shell: main scrolls; tab bar in document flow at the bottom.
+        FAB anchors to the tab bar wrapper (bottom: 100%), so it cannot sit
+        under the nav or depend on measured heights / visualViewport.
       */}
-      <div className="flex-1 flex flex-col min-h-0 relative">
+      <div className="flex-1 flex flex-col min-h-0">
         <main className="flex-1 min-h-0 overflow-y-auto overscroll-none">
           {children}
         </main>
 
-        {/*
-          Absolute layer above the in-flow tab bar for the ledger FAB.
-          Not position:fixed — avoids iOS viewport clipping.
-        */}
-        <div
-          id="fab-root"
-          className="pointer-events-none absolute inset-x-0 top-0 z-40 md:hidden"
-          style={{ bottom: 'var(--tabbar-total)' }}
-        />
-
-        <nav
-          ref={tabbarRef}
-          data-tabbar
-          className="tabbar-flow md:hidden shrink-0 z-50 flex
-                     border-t border-slate-200 dark:border-slate-700
-                     bg-white dark:bg-slate-900"
-        >
-          {NAV.map(n => <NavItem key={n.to} {...n} sidebar={false} />)}
-        </nav>
+        <div className="relative shrink-0 md:hidden">
+          {/* Sits just above the tab bar — bottom:100% of this wrapper */}
+          <div
+            id="fab-root"
+            className="pointer-events-none absolute right-4 z-40"
+            style={{ bottom: 'calc(100% + 0.75rem)' }}
+          />
+          <nav
+            data-tabbar
+            className="tabbar-flow flex
+                       border-t border-slate-200 dark:border-slate-700
+                       bg-white dark:bg-slate-900"
+          >
+            {NAV.map(n => <NavItem key={n.to} {...n} sidebar={false} />)}
+          </nav>
+        </div>
       </div>
     </div>
   )
