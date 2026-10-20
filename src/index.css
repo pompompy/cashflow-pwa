@@ -52,15 +52,67 @@ html.dark {
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 @layer base {
-  html { -webkit-tap-highlight-color: transparent; }
+  :root {
+    /* Mobile tab bar content height (icons + labels), excluding home-indicator */
+    --tabbar-height: 4rem;
+    --fab-gap: 0.75rem;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    height: 100%;
+  }
+
+  html, body, #root {
+    height: 100%;
+  }
 
   body {
+    margin: 0;
     font-family: 'DM Sans', system-ui, sans-serif;
     background-color: var(--bg-app);
     color: var(--text-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
+    /* Prefer dynamic viewport; -webkit-fill-available covers iOS standalone quirks */
+    min-height: 100%;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+  }
+
+  #root {
+    min-height: 100%;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+  }
+
+  /*
+   * App shell: fill the real screen. Avoid h-svh alone — on iOS Add-to-Home-Screen
+   * the “small viewport” can leave a phantom Safari-toolbar-sized gap under fixed UI.
+   */
+  .app-shell {
+    height: 100%;
+    min-height: 100%;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* display-mode + iOS navigator.standalone (class set in main.jsx) */
+  @media (display-mode: standalone) {
+    html, body, #root, .app-shell {
+      height: 100%;
+      min-height: 100%;
+      min-height: -webkit-fill-available;
+    }
+  }
+  html.is-standalone,
+  html.is-standalone body,
+  html.is-standalone #root,
+  html.is-standalone .app-shell {
+    height: 100%;
+    min-height: 100%;
+    min-height: -webkit-fill-available;
   }
 
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
@@ -71,6 +123,23 @@ html.dark {
   .page-pad {
     padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
     padding-bottom: 1.25rem;
+  }
+
+  /* FAB sits above the tab bar + home indicator; portaled to <body> so overflow
+     containers cannot clip it on iOS. */
+  .fab-add {
+    position: fixed;
+    right: 1rem;
+    bottom: calc(var(--tabbar-height) + var(--fab-gap) + env(safe-area-inset-bottom, 0px));
+    z-index: 60;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+  @media (min-width: 768px) {
+    .fab-add {
+      right: 1.5rem;
+      bottom: 1.5rem;
+    }
   }
 }
 

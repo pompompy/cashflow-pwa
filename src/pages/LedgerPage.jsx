@@ -9,6 +9,7 @@ import {
 } from '../db/index'
 import { formatCurrency, formatDateShort, formatDate, formatTime, today } from '../utils/dateUtils'
 import AddEditModal from '../components/AddEditModal'
+import Fab from '../components/Fab'
 import Modal from '../components/Modal'
 
 const SECTION_SIZE = 40
@@ -245,13 +246,16 @@ export default function LedgerPage() {
 
       <div className="h-6" />
 
-      {/* ── FAB ────────────────────────────────────────────── */}
+      {/* ── FAB (portaled to <body> so standalone iOS cannot clip it) ── */}
+      <Fab onClick={() => setAddOpen(true)} label="Add transaction">
+        <Plus size={26} />
+      </Fab>
+      {/* Desktop FAB — kept in-tree; no iOS overflow clipping on md+ */}
       <button
         onClick={() => setAddOpen(true)}
-        className="fixed right-4 md:right-6 w-14 h-14 bg-navy-800 text-white
-                   rounded-full shadow-lg flex items-center justify-center hover:bg-navy-700
-                   active:scale-95 transition-all z-30
-                   bottom-[calc(5rem+env(safe-area-inset-bottom,0px))] md:bottom-6"
+        className="hidden md:flex fixed bottom-6 right-6 w-14 h-14 bg-navy-800 text-white
+                   rounded-full shadow-lg items-center justify-center hover:bg-navy-700
+                   active:scale-95 transition-all z-30"
         aria-label="Add transaction"
       >
         <Plus size={26} />
