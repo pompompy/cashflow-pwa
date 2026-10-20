@@ -14,10 +14,7 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
   if (!open) return null
 
   return (
-    <div
-      className="fixed inset-x-0 z-50 flex items-end md:items-center justify-center"
-      style={{ top: 'var(--vv-top, 0px)', bottom: 'var(--vv-bottom, 0px)' }}
-    >
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"

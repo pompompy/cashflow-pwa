@@ -53,13 +53,12 @@ html.dark {
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    /* Fallback tab bar content height; JS overwrites --tabbar-total with the
-       real rendered height (includes home-indicator padding). */
+    /* Fallback until useTabbarHeight measures the real in-flow tab bar. */
     --tabbar-height: 4rem;
     --tabbar-total: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px));
     --fab-gap: 1rem;
-    /* Set by src/utils/viewport.js from visualViewport */
-    --app-height: 100dvh;
+    /* Set by src/utils/viewport.js — standalone forces --vv-bottom: 0 */
+    --app-height: 100%;
     --vv-top: 0px;
     --vv-bottom: 0px;
   }
@@ -81,27 +80,22 @@ html.dark {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
-    min-height: 100%;
-    min-height: var(--app-height, 100dvh);
+    height: 100%;
+    overflow: hidden;
   }
 
   #root {
     height: 100%;
-    min-height: var(--app-height, 100dvh);
+    overflow: hidden;
   }
 
   .app-shell {
     height: var(--app-height, 100%);
-    min-height: var(--app-height, 100%);
     max-height: var(--app-height, 100%);
     overflow: hidden;
   }
 
-  /*
-   * Home Screen / standalone: pin the document to the visible webview so iOS
-   * cannot leave a phantom Safari-toolbar gap under fixed chrome on first paint.
-   * (That gap was disappearing only after swiping the tab bar.)
-   */
+  /* Home Screen: pin the document to the webview; height from --app-height (innerHeight). */
   @media (display-mode: standalone) {
     html, body, #root { height: 100%; overflow: hidden; }
   }
@@ -133,30 +127,19 @@ html.dark {
     padding-bottom: 1.25rem;
   }
 
-  /* Tab bar pinned to the visual viewport bottom (--vv-bottom from JS).
-     Height comes from content + safe-area padding; JS measures it into --tabbar-total. */
-  .tabbar-fixed {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: var(--vv-bottom, 0px);
+  /* In-flow tab bar — last flex child, not position:fixed. */
+  .tabbar-flow {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  /* FAB: portaled to <body>; offset by measured tab bar + visual-viewport gap. */
+  /* Absolute inside #fab-root (which already ends above the tab bar). */
   .fab-add {
-    position: fixed;
+    position: absolute;
     right: 1rem;
-    bottom: calc(var(--tabbar-total) + var(--fab-gap) + var(--vv-bottom, 0px));
-    z-index: 60;
+    bottom: var(--fab-gap);
+    z-index: 40;
     width: 3.5rem;
     height: 3.5rem;
-  }
-  @media (min-width: 768px) {
-    .fab-add {
-      right: 1.5rem;
-      bottom: 1.5rem;
-    }
   }
 }
 
