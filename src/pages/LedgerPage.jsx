@@ -315,7 +315,8 @@ function TxRow({ tx, isFuture, onClick }) {
         break-words painted one character per line.
       */}
       <div className="flex-1 min-w-0 overflow-hidden">
-        <p className={`text-xs leading-snug break-words [overflow-wrap:anywhere] ${isFuture ? 'text-slate-800 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>
+        {/* line-clamp-2 guards against one-letter-per-line collapse if width ever squeezes */}
+        <p className={`text-xs leading-snug break-words line-clamp-2 ${isFuture ? 'text-slate-800 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>
           {label}
           {tx.isRecurring && (
             <span className="ml-1.5 text-[10px] text-navy-400 dark:text-navy-300
