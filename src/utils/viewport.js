@@ -1,10 +1,7 @@
 /**
- * Standalone Home Screen sizing is handled in CSS (html.is-standalone body
- * { position:fixed; inset:0 }). We intentionally do NOT set --app-height from
- * innerHeight / visualViewport — those are wrong on first paint on iOS and
- * recreate the phantom bottom gap.
- *
- * This module only marks standalone and keeps --vv-* at zero.
+ * iOS Home Screen (navigator.standalone): force --app-height to 100vh.
+ * 100dvh is short by the bottom safe-area on installed PWAs and leaves a
+ * permanent white band under an in-flow tab bar (swipe cannot fix it).
  */
 
 function isStandalone() {
@@ -19,15 +16,21 @@ export function syncViewportVars() {
   const root = document.documentElement
   if (isStandalone()) {
     root.classList.add('is-standalone')
+    root.style.setProperty('--app-height', '100vh')
+  } else {
+    root.classList.remove('is-standalone')
+    root.style.removeProperty('--app-height')
   }
-  root.style.setProperty('--vv-top', '0px')
-  root.style.setProperty('--vv-bottom', '0px')
-  // Clear any leftover height lock from older builds / cached SW.
-  root.style.removeProperty('--app-height')
 }
 
 export function installViewportLock() {
   syncViewportVars()
-  window.addEventListener('pageshow', syncViewportVars)
-  return () => window.removeEventListener('pageshow', syncViewportVars)
+  const mq = window.matchMedia?.('(display-mode: standalone)')
+  const onChange = () => syncViewportVars()
+  mq?.addEventListener?.('change', onChange)
+  window.addEventListener('pageshow', onChange)
+  return () => {
+    mq?.removeEventListener?.('change', onChange)
+    window.removeEventListener('pageshow', onChange)
+  }
 }

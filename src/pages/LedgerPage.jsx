@@ -293,23 +293,29 @@ function TxRow({ tx, isFuture, onClick }) {
   return (
     <div
       onClick={onClick}
-      className="flex items-start gap-3 px-5 py-3 group cursor-pointer transition-colors
+      className="flex items-start gap-2 md:gap-3 px-4 md:px-5 py-3 group cursor-pointer transition-colors
                  hover:bg-slate-50 dark:hover:bg-slate-800/60
                  active:bg-slate-100 dark:active:bg-slate-800"
     >
-      {/* Date + Time stacked */}
-      <div className="w-28 shrink-0 pt-0.5">
+      {/* Date + Time — narrow on mobile so the description keeps horizontal room */}
+      <div className="w-14 md:w-28 shrink-0 pt-0.5">
         <span className={`text-xs font-medium block ${isFuture ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
           {formatDateShort(tx.date)}
         </span>
         {timeStr && (
-          <span className="text-[10px] text-slate-300 dark:text-slate-600 block">{timeStr} ET</span>
+          <span className="text-[10px] text-slate-300 dark:text-slate-600 block leading-tight">
+            {timeStr}<span className="hidden md:inline"> ET</span>
+          </span>
         )}
       </div>
 
-      {/* Description — wraps, smaller font, badge flows with text */}
-      <div className="flex-1 min-w-0">
-        <p className={`text-xs leading-snug break-words ${isFuture ? 'text-slate-800 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>
+      {/*
+        Description must keep min-w-0 + a real share of the row. On a ~390px
+        phone, w-28 + w-24 + w-24 shrink-0 columns left ~0px for text and
+        break-words painted one character per line.
+      */}
+      <div className="flex-1 min-w-0 overflow-hidden">
+        <p className={`text-xs leading-snug break-words [overflow-wrap:anywhere] ${isFuture ? 'text-slate-800 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>
           {label}
           {tx.isRecurring && (
             <span className="ml-1.5 text-[10px] text-navy-400 dark:text-navy-300
@@ -323,30 +329,31 @@ function TxRow({ tx, isFuture, onClick }) {
         </p>
       </div>
 
-      {/* Pencil on hover for historical */}
+      {/* Pencil on hover — desktop only so it doesn’t steal mobile width */}
       {!isFuture && (
-        <Pencil size={13} className="shrink-0 text-slate-300 dark:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity mt-0.5" />
+        <Pencil size={13} className="hidden md:block shrink-0 text-slate-300 dark:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity mt-0.5" />
       )}
 
-      {/* Amount */}
-      <span className={`font-mono text-xs shrink-0 w-24 text-right pt-0.5 ${
-        positive ? 'text-emerald-600 dark:text-emerald-500' : 'text-red-500 dark:text-red-400'
-      } ${!isFuture ? 'opacity-70' : ''}`}>
-        {positive ? '+' : '−'}{formatCurrency(Math.abs(tx.amount))}
-      </span>
-
-      {/* Running balance */}
-      {balance !== undefined && (
-        <span className={`font-mono text-xs w-24 text-right shrink-0 pt-0.5 ${
-          balance >= 0
-            ? isFuture
-              ? 'text-slate-600 dark:text-slate-300'
-              : 'text-slate-400 dark:text-slate-500'
-            : 'text-red-600 dark:text-red-400 font-semibold'
-        } ${!isFuture ? 'opacity-60' : ''}`}>
-          {formatCurrency(balance)}
+      {/* Amount + balance: stacked on mobile, separate columns on md+ */}
+      <div className="shrink-0 flex flex-col items-end gap-0.5 md:contents">
+        <span className={`font-mono text-xs w-16 md:w-24 text-right pt-0.5 ${
+          positive ? 'text-emerald-600 dark:text-emerald-500' : 'text-red-500 dark:text-red-400'
+        } ${!isFuture ? 'opacity-70' : ''}`}>
+          {positive ? '+' : '−'}{formatCurrency(Math.abs(tx.amount))}
         </span>
-      )}
+
+        {balance !== undefined && (
+          <span className={`font-mono text-[10px] md:text-xs w-16 md:w-24 text-right md:pt-0.5 ${
+            balance >= 0
+              ? isFuture
+                ? 'text-slate-600 dark:text-slate-300'
+                : 'text-slate-400 dark:text-slate-500'
+              : 'text-red-600 dark:text-red-400 font-semibold'
+          } ${!isFuture ? 'opacity-60' : ''}`}>
+            {formatCurrency(balance)}
+          </span>
+        )}
+      </div>
     </div>
   )
 }
