@@ -7,6 +7,25 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CashFlow" />
+    <!--
+      Earliest possible viewport lock for iOS Add-to-Home-Screen. Without this,
+      the first paint often leaves a phantom gap under the tab bar until a swipe.
+    -->
+    <script>
+      (function () {
+        var standalone =
+          navigator.standalone === true ||
+          (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+        if (standalone) document.documentElement.classList.add('is-standalone')
+        var vv = window.visualViewport
+        var height = vv ? vv.height : window.innerHeight
+        var bottom = vv ? Math.max(0, window.innerHeight - vv.offsetTop - vv.height) : 0
+        var root = document.documentElement
+        root.style.setProperty('--app-height', height + 'px')
+        root.style.setProperty('--vv-bottom', bottom + 'px')
+        root.style.setProperty('--vv-top', (vv ? vv.offsetTop : 0) + 'px')
+      })()
+    </script>
     <link rel="apple-touch-icon" href="/icon-192.png" sizes="192x192" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link

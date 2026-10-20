@@ -53,9 +53,15 @@ html.dark {
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    /* Mobile tab bar content height (icons + labels), excluding home-indicator */
+    /* Fallback tab bar content height; JS overwrites --tabbar-total with the
+       real rendered height (includes home-indicator padding). */
     --tabbar-height: 4rem;
-    --fab-gap: 0.75rem;
+    --tabbar-total: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px));
+    --fab-gap: 1rem;
+    /* Set by src/utils/viewport.js from visualViewport */
+    --app-height: 100dvh;
+    --vv-top: 0px;
+    --vv-bottom: 0px;
   }
 
   html {
@@ -75,44 +81,46 @@ html.dark {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
-    /* Prefer dynamic viewport; -webkit-fill-available covers iOS standalone quirks */
     min-height: 100%;
-    min-height: 100dvh;
-    min-height: -webkit-fill-available;
+    min-height: var(--app-height, 100dvh);
   }
 
   #root {
-    min-height: 100%;
-    min-height: 100dvh;
-    min-height: -webkit-fill-available;
+    height: 100%;
+    min-height: var(--app-height, 100dvh);
+  }
+
+  .app-shell {
+    height: var(--app-height, 100%);
+    min-height: var(--app-height, 100%);
+    max-height: var(--app-height, 100%);
+    overflow: hidden;
   }
 
   /*
-   * App shell: fill the real screen. Avoid h-svh alone — on iOS Add-to-Home-Screen
-   * the “small viewport” can leave a phantom Safari-toolbar-sized gap under fixed UI.
+   * Home Screen / standalone: pin the document to the visible webview so iOS
+   * cannot leave a phantom Safari-toolbar gap under fixed chrome on first paint.
+   * (That gap was disappearing only after swiping the tab bar.)
    */
-  .app-shell {
-    height: 100%;
-    min-height: 100%;
-    min-height: 100dvh;
-    min-height: -webkit-fill-available;
-  }
-
-  /* display-mode + iOS navigator.standalone (class set in main.jsx) */
   @media (display-mode: standalone) {
-    html, body, #root, .app-shell {
-      height: 100%;
-      min-height: 100%;
-      min-height: -webkit-fill-available;
-    }
+    html, body, #root { height: 100%; overflow: hidden; }
   }
-  html.is-standalone,
-  html.is-standalone body,
+  html.is-standalone {
+    height: 100%;
+    overflow: hidden;
+  }
+  html.is-standalone body {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: var(--app-height, 100%);
+    overflow: hidden;
+  }
   html.is-standalone #root,
   html.is-standalone .app-shell {
     height: 100%;
-    min-height: 100%;
-    min-height: -webkit-fill-available;
+    max-height: 100%;
+    overflow: hidden;
   }
 
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
@@ -125,12 +133,21 @@ html.dark {
     padding-bottom: 1.25rem;
   }
 
-  /* FAB sits above the tab bar + home indicator; portaled to <body> so overflow
-     containers cannot clip it on iOS. */
+  /* Tab bar pinned to the visual viewport bottom (--vv-bottom from JS).
+     Height comes from content + safe-area padding; JS measures it into --tabbar-total. */
+  .tabbar-fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--vv-bottom, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* FAB: portaled to <body>; offset by measured tab bar + visual-viewport gap. */
   .fab-add {
     position: fixed;
     right: 1rem;
-    bottom: calc(var(--tabbar-height) + var(--fab-gap) + env(safe-area-inset-bottom, 0px));
+    bottom: calc(var(--tabbar-total) + var(--fab-gap) + var(--vv-bottom, 0px));
     z-index: 60;
     width: 3.5rem;
     height: 3.5rem;
