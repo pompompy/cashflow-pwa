@@ -37,7 +37,7 @@ function NavItem({ to, icon: Icon, label, sidebar }) {
 
 export default function Layout({ children }) {
   return (
-    <div className="flex h-svh" style={{ backgroundColor: 'var(--bg-app)' }}>
+    <div className="flex h-dvh" style={{ backgroundColor: 'var(--bg-app)' }}>
 
       {/* ── Desktop sidebar (always dark navy, unchanged) ─── */}
       <aside className="hidden md:flex flex-col w-52 shrink-0 bg-navy-900 border-r border-navy-950">
@@ -55,8 +55,7 @@ export default function Layout({ children }) {
 
       {/* ── Main content area ───────────────────────────────── */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        <main className="flex-1 overflow-y-auto overscroll-none"
-          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        <main className="flex-1 overflow-y-auto overscroll-none pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
           {children}
         </main>
       </div>
@@ -71,8 +70,6 @@ export default function Layout({ children }) {
         {NAV.map(n => <NavItem key={n.to} {...n} sidebar={false} />)}
       </nav>
 
-      {/* Spacer behind mobile bottom nav */}
-      <div className="md:hidden h-16" />
     </div>
   )
 }

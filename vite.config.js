@@ -17,10 +17,12 @@ export default defineConfig({
         background_color: '#f8fafc',
         display: 'standalone',
         orientation: 'portrait-primary',
-        start_url: '/',
+        id: '/cashflow-pwa',
+        start_url: '/cashflow-pwa',
+        scope: '/cashflow-pwa',
         icons: [
-          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+          { src: '/cashflow-pwa/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/cashflow-pwa/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
         ],
       },
       workbox: {

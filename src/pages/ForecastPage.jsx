@@ -158,7 +158,8 @@ export default function ForecastPage() {
   const strokeColor = hasShortfall ? '#dc2626' : '#124174'
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-5 space-y-5">
+    <div className="max-w-3xl mx-auto px-4 py-5 space-y-5"
+     style={{ paddingTop: 'calc(1.25rem + env(safe-area-inset-top, 0px))' }}>
 
       {/* Header */}
       <div className="flex items-start justify-between">

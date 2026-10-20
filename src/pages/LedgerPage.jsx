@@ -102,7 +102,8 @@ export default function LedgerPage() {
     <div className="max-w-2xl mx-auto px-0 md:px-4 md:py-6">
 
       {/* ── Balance header ─────────────────────────────────── */}
-      <div className="bg-navy-900 text-white px-5 py-5 md:rounded-2xl md:mb-4 sticky top-0 z-10 md:relative">
+      <div className="bg-navy-900 text-white px-5 py-5 md:rounded-2xl md:mb-4 sticky top-0 z-10 md:relative"
+     style={{ paddingTop: 'calc(1.25rem + env(safe-area-inset-top, 0px))' }}>
         <div className="flex items-start justify-between">
           <div>
             <p className="text-navy-300 text-xs font-medium tracking-wide uppercase">Current Balance</p>
@@ -288,7 +289,7 @@ function TxRow({ tx, isFuture, onClick }) {
                  active:bg-slate-100 dark:active:bg-slate-800"
     >
       {/* Date + Time stacked */}
-      <div className="w-28 shrink-0 pt-0.5">
+      <div className="w-20 shrink-0 pt-0.5"> {/* was w-28 */}
         <span className={`text-xs font-medium block ${isFuture ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
           {formatDateShort(tx.date)}
         </span>
@@ -299,7 +300,7 @@ function TxRow({ tx, isFuture, onClick }) {
 
       {/* Description — wraps, smaller font, badge flows with text */}
       <div className="flex-1 min-w-0">
-        <p className={`text-xs leading-snug break-words ${isFuture ? 'text-slate-800 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>
+        <p className={`text-xs leading-snug line-clamp-2 ${isFuture ? 'text-slate-800 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>
           {label}
           {tx.isRecurring && (
             <span className="ml-1.5 text-[10px] text-navy-400 dark:text-navy-300
@@ -319,7 +320,8 @@ function TxRow({ tx, isFuture, onClick }) {
       )}
 
       {/* Amount */}
-      <span className={`font-mono text-xs shrink-0 w-24 text-right pt-0.5 ${
+      {/* was w-24 */}
+      <span className={`font-mono text-xs shrink-0 w-20 text-right pt-0.5 ${
         positive ? 'text-emerald-600 dark:text-emerald-500' : 'text-red-500 dark:text-red-400'
       } ${!isFuture ? 'opacity-70' : ''}`}>
         {positive ? '+' : '−'}{formatCurrency(Math.abs(tx.amount))}

@@ -99,7 +99,7 @@ html.dark {
   html.dark .btn-danger:hover { background-color: rgb(153 27 27 / 0.35); }
 
   .input {
-    @apply w-full rounded-lg px-3 py-2 text-sm focus:outline-none transition-colors;
+    @apply w-full rounded-lg px-3 py-2 text-base focus:outline-none transition-colors;
     background-color: var(--bg-input);
     color: var(--text-body);
     border: 1px solid var(--border-input);
