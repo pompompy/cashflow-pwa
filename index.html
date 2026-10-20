@@ -8,18 +8,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CashFlow" />
     <!--
-      Mark standalone ASAP. Shell fill is CSS inset:0 (not innerHeight) —
-      reading the viewport on first paint was leaving the phantom bottom gap.
+      iOS Home Screen: set --app-height to 100vh before CSS. 100dvh is short
+      in standalone and leaves a white band under the tab bar.
     -->
     <script>
       (function () {
         var standalone =
           navigator.standalone === true ||
           (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-        if (standalone) document.documentElement.classList.add('is-standalone')
-        document.documentElement.style.removeProperty('--app-height')
-        document.documentElement.style.setProperty('--vv-bottom', '0px')
-        document.documentElement.style.setProperty('--vv-top', '0px')
+        if (standalone) {
+          document.documentElement.classList.add('is-standalone')
+          document.documentElement.style.setProperty('--app-height', '100vh')
+        }
       })()
     </script>
     <link rel="apple-touch-icon" href="/icon-192.png" sizes="192x192" />

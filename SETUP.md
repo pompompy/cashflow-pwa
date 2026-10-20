@@ -209,8 +209,10 @@ npm run build         # then re-drag dist/ to Netlify
 | PWA not installing on iPhone | Must use Safari, not Chrome |
 | Content under notch / home indicator | Confirm `viewport-fit=cover` is present and you've redeployed after the safe-area layout fixes |
 | Home-screen icon opens wrong page | Confirm manifest `start_url` resolves under `/your-repo/` (relative `./` with Vite `base`) |
-| White gap under tab bar in Home Screen app | Confirm GitHub Pages was redeployed (`npm run deploy`) and delete/re-add the Home Screen icon. A *small* white strip under the tab labels with the home indicator is normal safe-area padding — only a large Safari-toolbar-sized band is a bug. |
+| White gap under tab bar in Home Screen app | Deploy from **latest `main`** (`git pull && npm run deploy`), then delete/re-add the Home Screen icon. Standalone must use `100vh` (not `100dvh`). A *small* strip for the home indicator is normal; a large band means an old `gh-pages` build or oversized safe-area. |
 | + button clipped by tab bar on Home Screen | Same redeploy — `+` is anchored to `bottom: 100%` of the tab bar wrapper |
+| Ledger descriptions stack one letter per line | Mobile row was too narrow (date + amount + balance columns). Latest build stacks amount/balance on small screens — redeploy if you still see it. |
+| `npm run deploy` undoes phone fixes | Always `git pull origin main` before deploying. Deploying from an old checkout overwrites GitHub Pages with the old bundle. |
 
 ---
 

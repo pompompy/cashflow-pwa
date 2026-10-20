@@ -26,6 +26,15 @@
   --today-line:   #b4cfe9;   /* navy-200  */
   /* Focus ring */
   --ring:         #3d89c5;   /* navy-400  */
+
+  /*
+   * App height: 100dvh in Safari; 100vh in iOS Home Screen (standalone).
+   * On installed iOS PWAs, 100dvh is short by ~safe-area-inset-bottom and
+   * leaves a permanent white band under an in-flow tab bar.
+   */
+  --app-height: 100dvh;
+  /* Cap bottom inset — iOS has been seen reporting values ≫ home indicator. */
+  --safe-bottom: min(2.125rem, env(safe-area-inset-bottom, 0px));
 }
 
 html.dark {
@@ -52,11 +61,6 @@ html.dark {
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 @layer base {
-  :root {
-    --vv-top: 0px;
-    --vv-bottom: 0px;
-  }
-
   html {
     -webkit-tap-highlight-color: transparent;
     height: 100%;
@@ -74,7 +78,7 @@ html.dark {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
-    height: 100%;
+    height: var(--app-height, 100%);
     overflow: hidden;
   }
 
@@ -84,46 +88,30 @@ html.dark {
   }
 
   .app-shell {
-    height: 100%;
+    height: var(--app-height, 100%);
+    max-height: var(--app-height, 100%);
     overflow: hidden;
   }
 
-  /*
-   * Home Screen: fill the webview with inset:0 only — do NOT size from
-   * window.innerHeight / visualViewport. Those values are wrong on first
-   * paint and leave a Safari-toolbar-sized gap until a swipe relayouts.
-   */
+  /* display-mode + html.is-standalone (set from navigator.standalone) */
   @media (display-mode: standalone) {
-    html { height: 100%; overflow: hidden; }
+    :root { --app-height: 100vh; }
   }
   html.is-standalone {
+    --app-height: 100vh;
     height: 100%;
     overflow: hidden;
   }
-  html.is-standalone body {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-  }
+  html.is-standalone body,
   html.is-standalone #root,
   html.is-standalone .app-shell {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
+    height: var(--app-height);
+    max-height: var(--app-height);
     overflow: hidden;
   }
 
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
-  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pb-safe { padding-bottom: var(--safe-bottom); }
 
   /* Standard page chrome: top padding clears the iOS status bar in
      standalone (Add to Home Screen) mode when using black-translucent. */
@@ -132,10 +120,9 @@ html.dark {
     padding-bottom: 1.25rem;
   }
 
-  /* In-flow tab bar — last flex child. White padding under the labels is the
-     home-indicator safe area (normal for iOS); background must extend there. */
+  /* In-flow tab bar — capped bottom inset so iOS can’t leave a huge empty band. */
   .tabbar-flow {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-bottom: var(--safe-bottom);
   }
 
   /* Sized circle; placement comes from #fab-root (above the tab bar). */
