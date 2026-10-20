@@ -7,15 +7,30 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CashFlow" />
-    <link rel="apple-touch-icon" href="/cashflow-pwa/icon-192.png" />
+    <!--
+      iOS Home Screen: set --app-height to 100vh before CSS. 100dvh is short
+      in standalone and leaves a white band under the tab bar.
+    -->
+    <script>
+      (function () {
+        var standalone =
+          navigator.standalone === true ||
+          (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+        if (standalone) {
+          document.documentElement.classList.add('is-standalone')
+          document.documentElement.style.setProperty('--app-height', '100vh')
+        }
+      })()
+    </script>
+    <link rel="apple-touch-icon" href="/cashflow-pwa/icon-192.png" sizes="192x192" />
     <link rel="icon" type="image/svg+xml" href="/cashflow-pwa/favicon.svg" />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap"
       rel="stylesheet"
     />
     <title>CashFlow</title>
-    <script type="module" crossorigin src="/cashflow-pwa/assets/index-BeasQCvJ.js"></script>
-    <link rel="stylesheet" crossorigin href="/cashflow-pwa/assets/index-Bre3xecE.css">
+    <script type="module" crossorigin src="/cashflow-pwa/assets/index-BvLTI8b4.js"></script>
+    <link rel="stylesheet" crossorigin href="/cashflow-pwa/assets/index-CAsD4mJd.css">
   <link rel="manifest" href="/cashflow-pwa/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/cashflow-pwa/registerSW.js"></script></head>
   <body>
     <div id="root"></div>
