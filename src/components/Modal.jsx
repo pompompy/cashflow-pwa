@@ -25,8 +25,8 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
         className={`relative w-full ${maxWidth} md:rounded-2xl rounded-t-2xl shadow-2xl
                     max-h-[92svh] flex flex-col overflow-hidden`}
         style={{
-          background:       'var(--bg-card)',
-          paddingBottom:    'env(safe-area-inset-bottom)',
+          background:    'var(--bg-card)',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
       >
         {/* Header */}

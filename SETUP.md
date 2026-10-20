@@ -202,11 +202,15 @@ npm run build         # then re-drag dist/ to Netlify
 | Problem | Fix |
 |---|---|
 | `node: command not found` | Install Node.js from nodejs.org |
-| Blank screen on GitHub Pages | Check `base` in vite.config.js matches your repo name |
+| Blank screen on GitHub Pages | Check `base` in vite.config.js **and** `BrowserRouter` `basename` in `src/main.jsx` match your repo name |
 | OFX shows 0 transactions | Try CSV format instead — Ally occasionally changes their OFX layout |
 | Balance looks wrong | Go to Settings and manually correct the seed balance |
 | Suggestions not appearing | Need 3+ occurrences of a pattern; import a longer date range |
 | PWA not installing on iPhone | Must use Safari, not Chrome |
+| Content under notch / home indicator | Confirm `viewport-fit=cover` is present and you've redeployed after the safe-area layout fixes |
+| Home-screen icon opens wrong page | Confirm manifest `start_url` resolves under `/your-repo/` (relative `./` with Vite `base`) |
+| White gap under tab bar in Home Screen app | Confirm GitHub Pages was redeployed (`npm run deploy`) and delete/re-add the Home Screen icon. A *small* white strip under the tab labels with the home indicator is normal safe-area padding — only a large Safari-toolbar-sized band is a bug. |
+| + button clipped by tab bar on Home Screen | Same redeploy — `+` is anchored to `bottom: 100%` of the tab bar wrapper |
 
 ---
 

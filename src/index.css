@@ -52,18 +52,98 @@ html.dark {
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 @layer base {
-  html { -webkit-tap-highlight-color: transparent; }
+  :root {
+    --vv-top: 0px;
+    --vv-bottom: 0px;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    height: 100%;
+  }
+
+  html, body, #root {
+    height: 100%;
+  }
 
   body {
+    margin: 0;
     font-family: 'DM Sans', system-ui, sans-serif;
     background-color: var(--bg-app);
     color: var(--text-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
+    height: 100%;
+    overflow: hidden;
   }
 
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .app-shell {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /*
+   * Home Screen: fill the webview with inset:0 only — do NOT size from
+   * window.innerHeight / visualViewport. Those values are wrong on first
+   * paint and leave a Safari-toolbar-sized gap until a swipe relayouts.
+   */
+  @media (display-mode: standalone) {
+    html { height: 100%; overflow: hidden; }
+  }
+  html.is-standalone {
+    height: 100%;
+    overflow: hidden;
+  }
+  html.is-standalone body {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+  html.is-standalone #root,
+  html.is-standalone .app-shell {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+  /* Standard page chrome: top padding clears the iOS status bar in
+     standalone (Add to Home Screen) mode when using black-translucent. */
+  .page-pad {
+    padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+    padding-bottom: 1.25rem;
+  }
+
+  /* In-flow tab bar — last flex child. White padding under the labels is the
+     home-indicator safe area (normal for iOS); background must extend there. */
+  .tabbar-flow {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Sized circle; placement comes from #fab-root (above the tab bar). */
+  .fab-add {
+    display: flex;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
 }
 
 /* ── Components ───────────────────────────────────────────────────────────── */
