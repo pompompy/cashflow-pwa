@@ -8,18 +8,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CashFlow" />
     <!--
-      iOS Home Screen: set --app-height to 100vh before CSS. 100dvh is short
-      in standalone and leaves a white band under the tab bar.
+      Mark standalone ASAP. Shell fill is CSS inset:0 (not innerHeight) —
+      reading the viewport on first paint was leaving the phantom bottom gap.
     -->
     <script>
       (function () {
         var standalone =
           navigator.standalone === true ||
           (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-        if (standalone) {
-          document.documentElement.classList.add('is-standalone')
-          document.documentElement.style.setProperty('--app-height', '100vh')
-        }
+        if (standalone) document.documentElement.classList.add('is-standalone')
+        document.documentElement.style.removeProperty('--app-height')
+        document.documentElement.style.setProperty('--vv-bottom', '0px')
+        document.documentElement.style.setProperty('--vv-top', '0px')
       })()
     </script>
     <link rel="apple-touch-icon" href="/cashflow-pwa/icon-192.png" sizes="192x192" />
@@ -29,8 +29,8 @@
       rel="stylesheet"
     />
     <title>CashFlow</title>
-    <script type="module" crossorigin src="/cashflow-pwa/assets/index-BvLTI8b4.js"></script>
-    <link rel="stylesheet" crossorigin href="/cashflow-pwa/assets/index-CAsD4mJd.css">
+    <script type="module" crossorigin src="/cashflow-pwa/assets/index-HXXldkbA.js"></script>
+    <link rel="stylesheet" crossorigin href="/cashflow-pwa/assets/index-C_gXkN5-.css">
   <link rel="manifest" href="/cashflow-pwa/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/cashflow-pwa/registerSW.js"></script></head>
   <body>
     <div id="root"></div>
