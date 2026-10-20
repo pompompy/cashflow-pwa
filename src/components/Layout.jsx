@@ -1,6 +1,8 @@
 // src/components/Layout.jsx
+import { useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { LayoutList, TrendingUp, Upload, Sparkles, Settings } from 'lucide-react'
+import { useTabbarHeight } from '../hooks/useTabbarHeight'
 
 const NAV = [
   { to: '/',            icon: LayoutList, label: 'Ledger'      },
@@ -22,7 +24,7 @@ function NavItem({ to, icon: Icon, label, sidebar }) {
                 ? 'bg-navy-800 text-white'
                 : 'text-navy-300 hover:bg-navy-800/60 hover:text-white'
             }`
-          : `flex-1 flex flex-col items-center pt-2 pb-1 text-[11px] font-medium transition-colors ${
+          : `flex-1 flex flex-col items-center justify-center pt-2 pb-1 text-[11px] font-medium transition-colors ${
               isActive
                 ? 'text-navy-600 dark:text-navy-300'
                 : 'text-slate-400 dark:text-slate-500'
@@ -36,6 +38,9 @@ function NavItem({ to, icon: Icon, label, sidebar }) {
 }
 
 export default function Layout({ children }) {
+  const tabbarRef = useRef(null)
+  useTabbarHeight(tabbarRef)
+
   return (
     <div className="app-shell flex" style={{ backgroundColor: 'var(--bg-app)' }}>
 
@@ -55,28 +60,23 @@ export default function Layout({ children }) {
 
       {/* ── Main content area ───────────────────────────────── */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        {/*
-          Mobile bottom clearance = tab bar height + home-indicator safe area.
-          The fixed nav pads its own safe-area so icons sit above the indicator.
-        */}
         <main className="flex-1 overflow-y-auto overscroll-none
-                         pb-[calc(var(--tabbar-height)+env(safe-area-inset-bottom,0px))] md:pb-0">
+                         pb-[var(--tabbar-total,calc(var(--tabbar-height)+env(safe-area-inset-bottom,0px)))] md:pb-0">
           {children}
         </main>
       </div>
 
       {/* ── Mobile bottom tab bar ───────────────────────────── */}
       {/*
-        Fixed to the viewport bottom (outside the scrolling main). In standalone
-        mode the shell uses -webkit-fill-available so this sits on the real
-        screen edge — no phantom Safari-toolbar gap underneath.
+        bottom uses --vv-bottom so we pin to the *visual* viewport on iOS
+        Home Screen (avoids the phantom gap that only disappears after a swipe).
       */}
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-50 flex
+        ref={tabbarRef}
+        data-tabbar
+        className="tabbar-fixed md:hidden z-50 flex
                    border-t border-slate-200 dark:border-slate-700
-                   bg-white dark:bg-slate-900
-                   h-[calc(var(--tabbar-height)+env(safe-area-inset-bottom,0px))]
-                   pb-[env(safe-area-inset-bottom,0px)]"
+                   bg-white dark:bg-slate-900"
       >
         {NAV.map(n => <NavItem key={n.to} {...n} sidebar={false} />)}
       </nav>
