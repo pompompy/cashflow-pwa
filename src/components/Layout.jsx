@@ -42,9 +42,9 @@ export default function Layout({ children }) {
   useTabbarHeight(tabbarRef)
 
   return (
-    <div className="app-shell flex" style={{ backgroundColor: 'var(--bg-app)' }}>
+    <div className="app-shell flex flex-col md:flex-row" style={{ backgroundColor: 'var(--bg-app)' }}>
 
-      {/* ── Desktop sidebar (always dark navy, unchanged) ─── */}
+      {/* ── Desktop sidebar ─────────────────────────────────── */}
       <aside className="hidden md:flex flex-col w-52 shrink-0 bg-navy-900 border-r border-navy-950">
         <div className="px-5 py-6 border-b border-navy-800">
           <p className="font-serif text-xl text-white tracking-wide">CashFlow</p>
@@ -58,28 +58,36 @@ export default function Layout({ children }) {
         </div>
       </aside>
 
-      {/* ── Main content area ───────────────────────────────── */}
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        <main className="flex-1 overflow-y-auto overscroll-none
-                         pb-[var(--tabbar-total,calc(var(--tabbar-height)+env(safe-area-inset-bottom,0px)))] md:pb-0">
+      {/*
+        Column shell: main scrolls; tab bar is in NORMAL DOCUMENT FLOW at the
+        bottom (not position:fixed). Fixed bottom chrome is what left the
+        phantom Safari-toolbar gap on iOS Home Screen.
+      */}
+      <div className="flex-1 flex flex-col min-h-0 relative">
+        <main className="flex-1 min-h-0 overflow-y-auto overscroll-none">
           {children}
         </main>
-      </div>
 
-      {/* ── Mobile bottom tab bar ───────────────────────────── */}
-      {/*
-        bottom uses --vv-bottom so we pin to the *visual* viewport on iOS
-        Home Screen (avoids the phantom gap that only disappears after a swipe).
-      */}
-      <nav
-        ref={tabbarRef}
-        data-tabbar
-        className="tabbar-fixed md:hidden z-50 flex
-                   border-t border-slate-200 dark:border-slate-700
-                   bg-white dark:bg-slate-900"
-      >
-        {NAV.map(n => <NavItem key={n.to} {...n} sidebar={false} />)}
-      </nav>
+        {/*
+          Absolute layer above the in-flow tab bar for the ledger FAB.
+          Not position:fixed — avoids iOS viewport clipping.
+        */}
+        <div
+          id="fab-root"
+          className="pointer-events-none absolute inset-x-0 top-0 z-40 md:hidden"
+          style={{ bottom: 'var(--tabbar-total)' }}
+        />
+
+        <nav
+          ref={tabbarRef}
+          data-tabbar
+          className="tabbar-flow md:hidden shrink-0 z-50 flex
+                     border-t border-slate-200 dark:border-slate-700
+                     bg-white dark:bg-slate-900"
+        >
+          {NAV.map(n => <NavItem key={n.to} {...n} sidebar={false} />)}
+        </nav>
+      </div>
     </div>
   )
 }

@@ -1,32 +1,47 @@
 /**
- * iOS Home Screen PWAs often launch with a mismatched layout vs visual
- * viewport: fixed bottom chrome sits above a phantom gap until the user
- * interacts (e.g. swipes the tab bar). Lock CSS vars to visualViewport and
- * re-sync until iOS settles.
+ * Lock --app-height for the app shell.
+ *
+ * Important: in iOS Home Screen (standalone), do NOT offset chrome by the
+ * visualViewport “bottom gap”. That gap is the bug — encoding it as
+ * --vv-bottom parks the tab bar above empty space until a swipe relayouts.
  */
+
+function isStandalone() {
+  return (
+    (typeof navigator !== 'undefined' && navigator.standalone === true) ||
+    (typeof window !== 'undefined' &&
+      window.matchMedia?.('(display-mode: standalone)').matches)
+  )
+}
 
 function readViewport() {
   const vv = window.visualViewport
-  if (!vv) {
-    return {
-      height: window.innerHeight,
-      top: 0,
-      bottom: 0,
-    }
+
+  if (isStandalone()) {
+    // Use the largest reported height; always pin chrome to the true bottom.
+    const height = Math.max(
+      window.innerHeight || 0,
+      vv?.height || 0,
+      document.documentElement?.clientHeight || 0,
+    )
+    return { height, top: 0, bottom: 0 }
   }
-  // Gap between the visible bottom and the layout viewport bottom.
-  const bottom = Math.max(0, window.innerHeight - vv.offsetTop - vv.height)
+
+  if (!vv) {
+    return { height: window.innerHeight, top: 0, bottom: 0 }
+  }
+
   return {
     height: vv.height,
     top: vv.offsetTop,
-    bottom,
+    bottom: Math.max(0, window.innerHeight - vv.offsetTop - vv.height),
   }
 }
 
 export function syncViewportVars() {
   const { height, top, bottom } = readViewport()
   const root = document.documentElement
-  root.style.setProperty('--app-height', `${height}px`)
+  root.style.setProperty('--app-height', `${Math.round(height)}px`)
   root.style.setProperty('--vv-top', `${top}px`)
   root.style.setProperty('--vv-bottom', `${bottom}px`)
 }
@@ -35,8 +50,6 @@ export function installViewportLock() {
   const sync = () => syncViewportVars()
 
   sync()
-
-  // Double-rAF: first paint on iOS standalone is often still wrong.
   requestAnimationFrame(() => {
     sync()
     requestAnimationFrame(sync)
@@ -49,10 +62,12 @@ export function installViewportLock() {
 
   const vv = window.visualViewport
   vv?.addEventListener('resize', sync)
-  vv?.addEventListener('scroll', sync)
+  // Ignore visualViewport scroll in standalone — it recreates the phantom gap.
+  if (!isStandalone()) {
+    vv?.addEventListener('scroll', sync)
+  }
 
-  // Keep poking until the webview finishes settling after launch.
-  const timers = [50, 100, 200, 400, 800, 1600].map((ms) => setTimeout(sync, ms))
+  const timers = [50, 100, 200, 500, 1000].map((ms) => setTimeout(sync, ms))
 
   return () => {
     window.removeEventListener('resize', sync)
