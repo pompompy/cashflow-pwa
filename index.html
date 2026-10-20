@@ -7,30 +7,15 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CashFlow" />
-    <!--
-      Mark standalone ASAP. Shell fill is CSS inset:0 (not innerHeight) —
-      reading the viewport on first paint was leaving the phantom bottom gap.
-    -->
-    <script>
-      (function () {
-        var standalone =
-          navigator.standalone === true ||
-          (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-        if (standalone) document.documentElement.classList.add('is-standalone')
-        document.documentElement.style.removeProperty('--app-height')
-        document.documentElement.style.setProperty('--vv-bottom', '0px')
-        document.documentElement.style.setProperty('--vv-top', '0px')
-      })()
-    </script>
-    <link rel="apple-touch-icon" href="/cashflow-pwa/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/cashflow-pwa/icon-192.png" />
     <link rel="icon" type="image/svg+xml" href="/cashflow-pwa/favicon.svg" />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap"
       rel="stylesheet"
     />
     <title>CashFlow</title>
-    <script type="module" crossorigin src="/cashflow-pwa/assets/index-CGFDhbce.js"></script>
-    <link rel="stylesheet" crossorigin href="/cashflow-pwa/assets/index-7V9m5GCJ.css">
+    <script type="module" crossorigin src="/cashflow-pwa/assets/index-BeasQCvJ.js"></script>
+    <link rel="stylesheet" crossorigin href="/cashflow-pwa/assets/index-Bre3xecE.css">
   <link rel="manifest" href="/cashflow-pwa/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/cashflow-pwa/registerSW.js"></script></head>
   <body>
     <div id="root"></div>
