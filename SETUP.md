@@ -209,8 +209,8 @@ npm run build         # then re-drag dist/ to Netlify
 | PWA not installing on iPhone | Must use Safari, not Chrome |
 | Content under notch / home indicator | Confirm `viewport-fit=cover` is present and you've redeployed after the safe-area layout fixes |
 | Home-screen icon opens wrong page | Confirm manifest `start_url` resolves under `/your-repo/` (relative `./` with Vite `base`) |
-| White gap under tab bar in Home Screen app | Redeploy the in-flow tab bar build; delete and re-add the Home Screen icon. The tab bar is no longer `position: fixed` (that was what left the phantom gap). |
-| + button clipped by tab bar on Home Screen | Same redeploy — FAB is absolutely positioned in `#fab-root` above the in-flow tab bar |
+| White gap under tab bar in Home Screen app | Confirm GitHub Pages was redeployed (`npm run deploy`) and delete/re-add the Home Screen icon. A *small* white strip under the tab labels with the home indicator is normal safe-area padding — only a large Safari-toolbar-sized band is a bug. |
+| + button clipped by tab bar on Home Screen | Same redeploy — `+` is anchored to `bottom: 100%` of the tab bar wrapper |
 
 ---
 
